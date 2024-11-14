@@ -1,9 +1,10 @@
-# MVC Tip Calc
+# MVC Tip Calculator
 Simple Model View Controller Fyne project that doubles as a tip calculator.
 
 The purpose of this is for me to learn MVC architecture, as well as using this as a template repo.
 
 > Also see: https://github.com/ssebs/tipr and https://github.com/ssebs/tipr-mobile for more tip calculators.
+
 ## Screenshot of the UI
 ![screenshot](./Screenshot.png)
 
@@ -46,7 +47,6 @@ The purpose of this is for me to learn MVC architecture, as well as using this a
   - Create Pull Request
   - Once committed, git tag & push with same version from `FyneApp.toml`
   - `go install github.com/ssebs/MVCTipCalc@<version>`
-
 
 ## LICENSE
 [Apache 2 License](./LICENSE)
