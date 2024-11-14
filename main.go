@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"github.com/ssebs/MVCTipCalc/internal"
@@ -11,7 +9,7 @@ import (
 const TITLE = "MVC Tip Calc"
 
 func main() {
-	fmt.Println(TITLE)
+	// fmt.Println(TITLE)
 	myApp := app.New()
 	win := myApp.NewWindow(TITLE)
 
