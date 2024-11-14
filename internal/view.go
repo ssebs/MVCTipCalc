@@ -23,6 +23,7 @@ type TipView struct {
 	tipPercentSelect *widget.SelectEntry
 	finalTipAmount   *widget.Label
 	finalTotalAmount *widget.Label
+	submitBtn        fyne.Widget
 }
 
 func NewTipView() *TipView {
@@ -32,9 +33,33 @@ func NewTipView() *TipView {
 		finalTipAmount:   widget.NewLabel(""),
 		finalTotalAmount: widget.NewLabel(""),
 	}
+	tv.tipPercentSelect.SetText("15")
+	tv.submitBtn = widget.NewButton("Submit", tv.OnSubmit)
 
 	tv.ExtendBaseWidget(tv)
 	return tv
+}
+
+func (tv *TipView) OnSubmit() {
+	fmt.Println("Submitted")
+	fmt.Println(tv)
+}
+
+func (tv *TipView) CreateRenderer() fyne.WidgetRenderer {
+	c := container.NewVBox(
+		widget.NewLabelWithStyle("Tip Calc", fyne.TextAlignCenter, fyne.TextStyle{Bold: true}),
+		widget.NewSeparator(),
+		widget.NewLabel("Bill Amount"),
+		tv.billAmountEntry,
+		widget.NewLabel("Tip %"),
+		tv.tipPercentSelect,
+		widget.NewSeparator(),
+		tv.submitBtn,
+		widget.NewSeparator(),
+		widget.NewLabel(TIP_AMOUNT_LABEL_BASE_TXT),
+		widget.NewLabel(TOTAL_AMOUNT_LABEL_BASE_TXT),
+	)
+	return widget.NewSimpleRenderer(c)
 }
 
 func (tv *TipView) GetBillAmount() (float32, error) {
@@ -64,22 +89,9 @@ func (tv *TipView) SetTipPercent(percent string) {
 }
 func (tv *TipView) SetFinalTipAmount(amount float32) {
 	tv.finalTipAmount.SetText(fmt.Sprintf("%.2f", amount))
+	tv.finalTipAmount.Refresh()
 }
 func (tv *TipView) SetFinalTotalAmount(amount float32) {
 	tv.finalTotalAmount.SetText(fmt.Sprintf("%.2f", amount))
-}
-
-func (tv *TipView) CreateRenderer() fyne.WidgetRenderer {
-	c := container.NewVBox(
-		widget.NewLabelWithStyle("Tip Calc", fyne.TextAlignCenter, fyne.TextStyle{Bold: true}),
-		widget.NewSeparator(),
-		widget.NewLabel("Bill Amount"),
-		tv.billAmountEntry,
-		widget.NewLabel("Tip %"),
-		tv.tipPercentSelect,
-		widget.NewSeparator(),
-		widget.NewLabel(TIP_AMOUNT_LABEL_BASE_TXT),
-		widget.NewLabel(TOTAL_AMOUNT_LABEL_BASE_TXT),
-	)
-	return widget.NewSimpleRenderer(c)
+	tv.finalTotalAmount.Refresh()
 }
