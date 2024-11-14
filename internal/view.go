@@ -24,26 +24,33 @@ type TipView struct {
 	finalTipAmount   *widget.Label
 	finalTotalAmount *widget.Label
 	submitBtn        fyne.Widget
+	onTapped         func(*TipView)
 }
 
 func NewTipView() *TipView {
 	tv := &TipView{
 		billAmountEntry:  widget.NewEntry(),
 		tipPercentSelect: widget.NewSelectEntry(DEFAULT_TIP_PERCENTAGES),
-		finalTipAmount:   widget.NewLabel(""),
-		finalTotalAmount: widget.NewLabel(""),
+		finalTipAmount:   widget.NewLabel(TIP_AMOUNT_LABEL_BASE_TXT),
+		finalTotalAmount: widget.NewLabel(TOTAL_AMOUNT_LABEL_BASE_TXT),
 	}
 	tv.tipPercentSelect.SetText("15")
-	tv.submitBtn = widget.NewButton("Submit", tv.OnSubmit)
+
+	tv.submitBtn = widget.NewButton("Submit", func() {
+		if tv.onTapped != nil {
+			tv.onTapped(tv)
+		} else {
+			fmt.Println("Submitted, use SetOnTapped to add a callback.")
+			fmt.Println(tv)
+		}
+	})
 
 	tv.ExtendBaseWidget(tv)
 	return tv
 }
 
-// TODO: Add listener?
-func (tv *TipView) OnSubmit() {
-	fmt.Println("Submitted")
-	fmt.Println(tv)
+func (tv *TipView) SetOnSubmitTapped(f func(*TipView)) {
+	tv.onTapped = f
 }
 
 func (tv *TipView) CreateRenderer() fyne.WidgetRenderer {
@@ -57,8 +64,8 @@ func (tv *TipView) CreateRenderer() fyne.WidgetRenderer {
 		widget.NewSeparator(),
 		tv.submitBtn,
 		widget.NewSeparator(),
-		widget.NewLabel(TIP_AMOUNT_LABEL_BASE_TXT),
-		widget.NewLabel(TOTAL_AMOUNT_LABEL_BASE_TXT),
+		tv.finalTipAmount,
+		tv.finalTotalAmount,
 	)
 	return widget.NewSimpleRenderer(c)
 }
@@ -89,11 +96,11 @@ func (tv *TipView) SetTipPercent(percent string) {
 	tv.tipPercentSelect.Refresh()
 }
 func (tv *TipView) SetFinalTipAmount(amount float32) {
-	tv.finalTipAmount.SetText(fmt.Sprintf("%.2f", amount))
+	tv.finalTipAmount.SetText(fmt.Sprintf("%s: %.2f", TIP_AMOUNT_LABEL_BASE_TXT, amount))
 	tv.finalTipAmount.Refresh()
 }
 func (tv *TipView) SetFinalTotalAmount(amount float32) {
-	tv.finalTotalAmount.SetText(fmt.Sprintf("%.2f", amount))
+	tv.finalTotalAmount.SetText(fmt.Sprintf("%s: %.2f", TOTAL_AMOUNT_LABEL_BASE_TXT, amount))
 	tv.finalTotalAmount.Refresh()
 }
 

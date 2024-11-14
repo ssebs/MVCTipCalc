@@ -15,13 +15,13 @@ func main() {
 	myApp := app.New()
 	win := myApp.NewWindow(TITLE)
 
-	// tipModel := internal.NewTipModel()
+	tipModel := internal.NewTipModel()
 	tipView := internal.NewTipView()
+	tipController := internal.NewTipController(tipModel, tipView)
 
-	win.SetContent(
-		tipView,
-	)
-	win.Resize(fyne.NewSquareSize(200))
+	win.SetContent(tipController.TipView)
+
+	win.Resize(fyne.NewSquareSize(400))
 	win.CenterOnScreen()
 	win.Show()
 	myApp.Run()
