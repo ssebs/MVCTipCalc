@@ -1,7 +1,5 @@
 package internal
 
-import "fmt"
-
 type TipController struct {
 	*TipModel
 	*TipView
@@ -13,31 +11,41 @@ func NewTipController(tm *TipModel, tv *TipView) *TipController {
 		TipView:  tv,
 	}
 
-	tc.TipView.SetOnSubmitTapped(func(tv *TipView) {
-		fmt.Println("In SetOnSubmitTapped")
+	tc.TipView.SetOnSubmit(func() {
+		tc.UpdateModelFromView()
+		tc.CalcTipAndUpdate()
+	})
 
-		// update model to current values
-		billAmount, err := tc.TipView.GetBillAmount()
-		if err != nil {
-			// TODO: use view.showerror
-			fmt.Println(billAmount, "should be a number!")
-		}
-		tipPercent, err := tc.TipView.GetTipPercent()
-		if err != nil {
-			// TODO: use view.showerror
-			fmt.Println(tipPercent, "should be a number!")
-		}
-		tc.TipModel.SetBillAmount(billAmount)
-		tc.TipModel.SetTipPercent(tipPercent)
-
-		// calculate val using model
-		finalTip := billAmount * (tipPercent / 100)
-		finalTotal := billAmount + finalTip
-
-		// update view
-		tc.TipView.SetFinalTipAmount(finalTip)
-		tc.TipView.SetFinalTotalAmount(finalTotal)
+	tc.TipView.SetOnSelectTip(func(s string) {
+		tc.UpdateModelFromView()
+		tc.CalcTipAndUpdate()
 	})
 
 	return tc
+}
+
+func (tc *TipController) UpdateModelFromView() {
+	// update model to current values
+	billAmount, err := tc.TipView.GetBillAmount()
+	if err != nil {
+		tc.TipView.SetErrorMsg("Bill amount must be a number.")
+		return
+	}
+	tipPercent, err := tc.TipView.GetTipPercent()
+	if err != nil {
+		tc.TipView.SetErrorMsg("Tip % must be a number.")
+		return
+	}
+	tc.TipModel.SetBillAmount(billAmount)
+	tc.TipModel.SetTipPercent(tipPercent)
+}
+
+func (tc *TipController) CalcTipAndUpdate() {
+	// calculate tip and total
+	finalTip := tc.TipModel.GetBillAmount() * (tc.TipModel.GetTipPercent() / 100)
+	finalTotal := tc.TipModel.GetBillAmount() + finalTip
+
+	// update view
+	tc.TipView.SetFinalTipAmount(finalTip)
+	tc.TipView.SetFinalTotalAmount(finalTotal)
 }

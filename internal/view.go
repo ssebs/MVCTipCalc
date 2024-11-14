@@ -14,7 +14,7 @@ var DEFAULT_TIP_PERCENTAGES = []string{"12", "15", "18", "20", "22"}
 const TIP_AMOUNT_LABEL_BASE_TXT = "Tip amount:"
 const TOTAL_AMOUNT_LABEL_BASE_TXT = "Total amount:"
 
-// Should be a fyne.widget
+// Implement fyne.widget
 var _ fyne.Widget = (*TipView)(nil)
 
 type TipView struct {
@@ -23,22 +23,29 @@ type TipView struct {
 	tipPercentSelect *widget.SelectEntry
 	finalTipAmount   *widget.Label
 	finalTotalAmount *widget.Label
+	errorMsg         *widget.Label
 	submitBtn        fyne.Widget
-	onTapped         func(*TipView)
+	onSubmit         func()
 }
 
 func NewTipView() *TipView {
+	boldStyle := fyne.TextStyle{Bold: true}
+
 	tv := &TipView{
 		billAmountEntry:  widget.NewEntry(),
 		tipPercentSelect: widget.NewSelectEntry(DEFAULT_TIP_PERCENTAGES),
-		finalTipAmount:   widget.NewLabel(TIP_AMOUNT_LABEL_BASE_TXT),
-		finalTotalAmount: widget.NewLabel(TOTAL_AMOUNT_LABEL_BASE_TXT),
+		errorMsg:         widget.NewLabel(""),
+		finalTipAmount:   widget.NewLabelWithStyle("", fyne.TextAlignLeading, boldStyle),
+		finalTotalAmount: widget.NewLabelWithStyle("", fyne.TextAlignLeading, boldStyle),
 	}
-	tv.tipPercentSelect.SetText("15")
+	tv.billAmountEntry.PlaceHolder = "$"
+	tv.tipPercentSelect.SetText(DEFAULT_TIP_PERCENTAGES[1])
+	tv.errorMsg.Importance = widget.DangerImportance
 
+	// On btn press, check if onSubmit is set to anything and do that. (Controller should use SetOnSubmit)
 	tv.submitBtn = widget.NewButton("Submit", func() {
-		if tv.onTapped != nil {
-			tv.onTapped(tv)
+		if tv.onSubmit != nil {
+			tv.onSubmit()
 		} else {
 			fmt.Println("Submitted, use SetOnTapped to add a callback.")
 			fmt.Println(tv)
@@ -49,13 +56,24 @@ func NewTipView() *TipView {
 	return tv
 }
 
-func (tv *TipView) SetOnSubmitTapped(f func(*TipView)) {
-	tv.onTapped = f
+// Run f(s) when Select changes values
+func (tv *TipView) SetOnSelectTip(f func(s string)) {
+	tv.tipPercentSelect.OnChanged = f
+}
+
+// Run f() when Submit button is Tapped
+func (tv *TipView) SetOnSubmit(f func()) {
+	tv.onSubmit = f
+}
+
+func (tv *TipView) SetErrorMsg(err string) {
+	tv.errorMsg.SetText(err)
+	tv.errorMsg.Refresh()
 }
 
 func (tv *TipView) CreateRenderer() fyne.WidgetRenderer {
 	c := container.NewVBox(
-		widget.NewLabelWithStyle("Tip Calc", fyne.TextAlignCenter, fyne.TextStyle{Bold: true}),
+		widget.NewLabelWithStyle("Tip Calculator", fyne.TextAlignCenter, fyne.TextStyle{Bold: true}),
 		widget.NewSeparator(),
 		widget.NewLabel("Bill Amount"),
 		tv.billAmountEntry,
@@ -64,8 +82,15 @@ func (tv *TipView) CreateRenderer() fyne.WidgetRenderer {
 		widget.NewSeparator(),
 		tv.submitBtn,
 		widget.NewSeparator(),
-		tv.finalTipAmount,
-		tv.finalTotalAmount,
+		container.NewHBox(
+			widget.NewLabel(TIP_AMOUNT_LABEL_BASE_TXT),
+			tv.finalTipAmount,
+		),
+		container.NewHBox(
+			widget.NewLabel(TOTAL_AMOUNT_LABEL_BASE_TXT),
+			tv.finalTotalAmount,
+		),
+		tv.errorMsg,
 	)
 	return widget.NewSimpleRenderer(c)
 }
@@ -96,11 +121,11 @@ func (tv *TipView) SetTipPercent(percent string) {
 	tv.tipPercentSelect.Refresh()
 }
 func (tv *TipView) SetFinalTipAmount(amount float32) {
-	tv.finalTipAmount.SetText(fmt.Sprintf("%s: %.2f", TIP_AMOUNT_LABEL_BASE_TXT, amount))
+	tv.finalTipAmount.SetText(fmt.Sprintf("$%.2f", amount))
 	tv.finalTipAmount.Refresh()
 }
 func (tv *TipView) SetFinalTotalAmount(amount float32) {
-	tv.finalTotalAmount.SetText(fmt.Sprintf("%s: %.2f", TOTAL_AMOUNT_LABEL_BASE_TXT, amount))
+	tv.finalTotalAmount.SetText(fmt.Sprintf("$%.2f", amount))
 	tv.finalTotalAmount.Refresh()
 }
 

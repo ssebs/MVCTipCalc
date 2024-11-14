@@ -5,6 +5,7 @@ type TipModel struct {
 	tipPercent float32
 }
 
+// default 15% tip
 func NewTipModel() *TipModel {
 	return &TipModel{
 		billAmount: 0,
