@@ -16,10 +16,9 @@ func NewTipController(tm *TipModel, tv *TipView) *TipController {
 	tc.TipView.SetOnSubmit(func() {
 		tc.UpdateModelFromView()
 		tc.CalcTipAndUpdate()
-		go func(tc *TipController) {
-			tc.TipView.SetErrorMsg("This button is redundant")
 
-		}(tc)
+		tc.TipView.SetErrorMsg("This button is redundant")
+		// TODO: https://gobyexample.com/timers use TimedFunc
 	})
 
 	tc.TipView.SetOnSelectTip(func(s string) {
