@@ -1,5 +1,7 @@
 package internal
 
+import "time"
+
 type TipController struct {
 	*TipModel
 	*TipView
@@ -14,9 +16,17 @@ func NewTipController(tm *TipModel, tv *TipView) *TipController {
 	tc.TipView.SetOnSubmit(func() {
 		tc.UpdateModelFromView()
 		tc.CalcTipAndUpdate()
+		go func(tc *TipController) {
+			tc.TipView.SetErrorMsg("This button is redundant")
+
+		}(tc)
 	})
 
 	tc.TipView.SetOnSelectTip(func(s string) {
+		tc.UpdateModelFromView()
+		tc.CalcTipAndUpdate()
+	})
+	tc.TipView.SetBillAmountEntryOnChanged(func(s string) {
 		tc.UpdateModelFromView()
 		tc.CalcTipAndUpdate()
 	})
@@ -48,4 +58,8 @@ func (tc *TipController) CalcTipAndUpdate() {
 	// update view
 	tc.TipView.SetFinalTipAmount(finalTip)
 	tc.TipView.SetFinalTotalAmount(finalTotal)
+}
+
+func (tc *TipController) TimedFunc(d time.Duration, f func(*TipController)) {
+	// TODO: implement
 }
