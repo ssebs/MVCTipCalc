@@ -1,0 +1,8 @@
+Website = "https://github.com/ssebs/MVCTipCalc/"
+
+[Details]
+  Icon = "Icon.png"
+  Name = "Tip Calc"
+  ID = "com.ssebs.mvctipcalc"
+  Version = "0.0.1"
+  Build = 0
