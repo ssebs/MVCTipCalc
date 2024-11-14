@@ -21,7 +21,7 @@ Simple MVC example fyne project that doubles as a tip calculator.
 ### Build the code
 > The first build will take > 5 mins since fyne needs to be compiled with c, then it's cached.
 
-- `go run ./cmd/tipcalc.go` 
+- `go run main.go` 
 - To package:
   - Make sure `fyne` CLI is installed
     - `go install fyne.io/fyne/v2/cmd/fyne@latest`
