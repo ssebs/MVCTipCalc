@@ -40,6 +40,7 @@ func NewTipView() *TipView {
 	return tv
 }
 
+// TODO: Add listener?
 func (tv *TipView) OnSubmit() {
 	fmt.Println("Submitted")
 	fmt.Println(tv)
@@ -94,4 +95,19 @@ func (tv *TipView) SetFinalTipAmount(amount float32) {
 func (tv *TipView) SetFinalTotalAmount(amount float32) {
 	tv.finalTotalAmount.SetText(fmt.Sprintf("%.2f", amount))
 	tv.finalTotalAmount.Refresh()
+}
+
+func (tv *TipView) String() string {
+	billAmount, _ := tv.GetBillAmount()
+	tipPercent, _ := tv.GetTipPercent()
+	tipAmount, _ := tv.GetFinalTipAmount()
+	totalAmount, _ := tv.GetFinalTotalAmount()
+
+	return fmt.Sprintf(
+		"bill: %.2f, tip: %.2f, tipAmount: %.2f, totalAmount: %.2f",
+		billAmount,
+		tipPercent,
+		tipAmount,
+		totalAmount,
+	)
 }
