@@ -1,7 +1,12 @@
 # MVC Tip Calc
-Simple MVC example fyne project that doubles as a tip calculator.
+Simple Model View Controller Fyne project that doubles as a tip calculator.
+
+The purpose of this is for me to learn MVC architecture, as well as using this as a template repo.
 
 > Also see: https://github.com/ssebs/tipr and https://github.com/ssebs/tipr-mobile for more tip calculators.
+## Screenshot of the UI
+![screenshot](./Screenshot.png)
+
 
 ## Building and running
 ### Prereqs
@@ -16,7 +21,7 @@ Simple MVC example fyne project that doubles as a tip calculator.
 - From source:
   - Git clone https://github.com/ssebs/MVCTipCalc
 - Go pkg
-  - `go get github.com/ssebs/go-mmp`
+  - `go get github.com/ssebs/MVCTipCalc`
 
 ### Build the code
 > The first build will take > 5 mins since fyne needs to be compiled with c, then it's cached.
@@ -27,7 +32,7 @@ Simple MVC example fyne project that doubles as a tip calculator.
     - `go install fyne.io/fyne/v2/cmd/fyne@latest`
     - `go install github.com/fyne-io/fyne-cross@latest` for cross platform pkging
   - Windows:
-    - `PS go-mmp> fyne package -os windows`
+    - `PS > fyne package -os windows`
       - Linux pkg for Win:
         - `fyne-cross windows`
   - Mac:
@@ -40,9 +45,8 @@ Simple MVC example fyne project that doubles as a tip calculator.
   - Update Version in `FyneApp.toml`
   - Create Pull Request
   - Once committed, git tag & push with same version from `FyneApp.toml`
-  - `go get github.com/ssebs/MVCTipCalc@<version>`
+  - `go install github.com/ssebs/MVCTipCalc@<version>`
 
-<hr/>
 
 ## LICENSE
 [Apache 2 License](./LICENSE)

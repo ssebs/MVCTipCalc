@@ -5,4 +5,4 @@ Website = "https://github.com/ssebs/MVCTipCalc/"
   Name = "Tip Calc"
   ID = "com.ssebs.mvctipcalc"
   Version = "1.0.0"
-  Build = 1
+  Build = 4

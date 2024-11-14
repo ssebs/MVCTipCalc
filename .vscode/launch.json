@@ -15,17 +15,12 @@
             ]
         },
         {
-            "name": "Fyne Build",
+            "name": "Fyne Build Win",
             "type": "go",
             "request": "launch",
-            "mode": "auto",
             "cwd": "${workspaceFolder}",
-            "program": "fyne",
-            "args": [
-                "package",
-                "-os",
-                "windows"
-            ]
+            "preLaunchTask": "fyne_pkg_win",
+            "program": "main.go",
         },
     ]
 }
